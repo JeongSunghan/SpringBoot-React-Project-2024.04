@@ -28,7 +28,6 @@ function App() {
                             <td>{user.uid}</td>
                             <td>{user.uname}</td>
                             <td>{user.email}</td>
-
                         </tr>
                     ))
                 }
