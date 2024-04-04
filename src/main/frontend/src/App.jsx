@@ -1,40 +1,52 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import logo from './logo.svg';
 import './App.css';
 
 function App() {
-  const [form, setForm] = useState({uid:'', uname:''});
-  const [file, setFile] = useState(null);
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setForm({ ...form, [name]: value });
-  }
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  }
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const formData = new FormData();
-    formData.append('uid', form.uid);
-    formData.append('uname', form.uname);
-    formData.append('file', file);
-    console.log(formData);
-    const axiosConfig = { headers: {"Content-Type": "multipart/form-data", } }
-    axios
-      .post('/rp/react/multi', formData, axiosConfig)
-      .then((res) => {console.log(res);});
-  }
+  const [data, setData] = useState('');
+  const [users, setUsers] = useState([]);
+
+
+  useEffect(() => {
+    axios.get('/rp/react/data')
+      .then(res => {
+        console.log(res.data);
+        setData(res.data);
+      })
+      .catch(err => { console.log(err); });
+  }, []);
+
+  useEffect(() => {
+    axios.get('/rp/react/json')
+      .then(res => setUsers(res.data))
+      .catch(err => { console.log(err); });
+  }, []);
+
   return (
     <div className="App">
-      <form onSubmit={handleSubmit}>
-        <label htmlFor='uid'>아이디:</label>
-        <input type='text' id='uid' name='uid' value={form.uid} onChange={handleChange} /><br />
-        <label htmlFor='name'>이름:</label>
-        <input type='text' id='uname' name='uname' value={form.uname} onChange={handleChange} /><br />
-        <label htmlFor='file'>파일:</label>
-        <input type='file' id='file' name='file' onChange={handleFileChange} /><br />
-        <button>확인</button>
-      </form>
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <table border={3}>
+          <thead>
+            <tr>
+              <th>아이디</th><th>이름</th><th>이메일</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map(user => (
+              <tr key={user.uid}>
+                <td>{user.uid}</td>
+                <td>{user.uname}</td>
+                <td>{user.email}</td>                
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <h3>
+          받아온 값 : {data ? data : '받아오기를 실패했습니다.'}
+        </h3>
+      </header>
     </div>
   );
 }

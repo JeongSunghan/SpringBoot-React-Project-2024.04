@@ -1,7 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './apps/AppFile';
+
+//apps파일에서 실행하기
+// import App from './apps/AppUsers';      
+
+// 기본 실행
+import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
